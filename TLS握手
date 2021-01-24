@@ -1,0 +1,37 @@
+TLS握手
+1.client hello
+消息包含Random1、客户端支持的加密套件列表和SSL version信息等
+
+2.sever hello
+消息包含从套件列表里选取的一个套件，套件决定了后续加密和生成摘要时要使用的加密算法和Random2
+
+    3.certificate
+    服务端下发证书给客户端，让客户端验证自己的身份，客户端验证通过后从证书中取出公钥
+
+    4.certificate request
+    服务端要求客户端上传证书的消息，这一步是可选的。在安全性较高的场景会使用到
+
+5.server hello done
+服务端告诉客户端server hello阶段结束
+
+6.certificate verify
+客户端收到服务端的证书后，先从CA验证证书的合法性，验证通过后从证书中取出公钥
+并且生成Random3，并且用公钥非对称加密Random3，生成preMaster key
+
+    7.client key exchange
+    将客户端生成的preMaster key传送给服务端，服务端用自己的私钥解密得到Random3
+    至此，客户端和服务端都拥有了Random1、Random2、Random3。两端可以用一样的算法对这三个数进行加密，生成一个密钥
+    握手结束后，应用层的数据都是用这个密钥进行对称加密
+    为什么要三个随机数？因为TLS握手的消息都是明文传输的，选用多个随机数种子可以避免密钥被暴力破解出来
+
+    8.Change Cipher Spec(Client)
+    这一步是客户端通知服务端后面再发送的消息都会使用前面协商出来的秘钥加密了，是一条事件消息。
+
+9.Encrypted Handshake Message(Client Finish)
+这一步对应的是 Client Finish 消息，客户端将前面的握手消息生成摘要再用协商好的秘钥加密，这是客户端发出的第一条加密消息。
+
+10.Server Finish
+服务端接收后会用秘钥解密，能解出来说明前面协商出来的秘钥是一致的。将结果告诉客户端，建立TLS连接
+
+11.Application Data
+到这里，双方已安全地协商出了同一份秘钥，所有的应用层数据都会用这个秘钥加密后再通过 TCP 进行可靠传输。

@@ -1,0 +1,47 @@
+// 问：如何用css画一个三角形
+<html>
+    <!-- <style>
+        div{
+            width: 0;
+height: 0;
+border-top: 40px solid transparent;
+border-left: 40px solid transparent;
+border-right: 40px solid transparent;
+border-bottom: 40px solid #ff0000;
+        }
+    </style>
+
+    <div>   </div> -->
+
+
+
+<div id="main">
+    <div id="nav">nav</div>
+    <div id="content">content</div>
+</div>
+
+<style>
+
+html, body {
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+}
+#main {
+    background-color: #999;
+    height: 100%;
+} 
+
+#nav {
+    background-color: #85d989;
+    height: 50px;
+}
+
+#content {
+    /* height: calc(100% - 50px); */
+    float: left;
+    transform: translateY(50px);
+    
+}
+</style>
+</html>

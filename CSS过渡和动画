@@ -1,0 +1,19 @@
+transition: property duration timing-function delay;
+transition-property : 为哪些属性设置过渡效果
+transition-duration : 过渡效果持续的时间
+transition-timing-function : 过渡效果的速度变化
+transition-delay : 延迟执行的时间
+
+
+animation: name duration timing-function delay iteration-count direction;
+默认值： none 0 ease 0 1 normal
+animation 属性是一个简写属性，用于设置六个动画属性：
+
+animation-name : 要绑定到选择器的关键帧（动画）名称
+animation-duration : 动画持续时间
+animation-timing-function : 动画的速度变化
+animation-delay : 延迟执行的时间
+animation-iteration-count : 动画的播放次数
+animation-direction : 动画运动的方向
+
+http://www.ruanyifeng.com/blog/2014/02/css_transition_and_animation.html

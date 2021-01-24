@@ -1,0 +1,8 @@
+webpack3和webpack4区别
+https://www.cnblogs.com/Super-scarlett/p/11085363.html
+1.增加了一个mode配置，只有两种值development和production。webpack4中通过内置的mode使用相应模式的内置优化。
+2.webpack.optimize.CommonsChunkPlugin已经从webpack4中移除。可使用optimization.splitChunks进行模块划分（提取公用代码）。
+3.现在也不需要使用这个UglifyJsPlugin了，只需要使用optimization.minimize为true就行，production mode下面自动为true。
+4.移除loaders，必须使用rules（在3版本的时候loaders和rules 是共存的但是到4的时候只允许使用rules）。
+5.支持es6的方式导入JSON文件，并且可以过滤无用的代码。
+6.升级happypack插件（happypack可以进行多线程加速打包）

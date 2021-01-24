@@ -1,0 +1,37 @@
+cookie相关
+扫盲https://www.cnblogs.com/qcloud1001/p/10101067.html
+https://zhuanlan.zhihu.com/p/52091630
+
+0.cookie的作用和弊端
+
+cookie的作用：
+1.可以在客户端上保存用户数据，起到简单的缓存和用户身份识别等作用。
+2.保存用户的登陆状态，用户进行登陆，成功登陆后，服务器生成特定的cookie返回给客户端，客户端下次访问该域名下的任何页面，将该cookie的信息发送给服务器，服务器经过检验，来判断用户是否登陆。
+3.记录用户的行为。  
+cookie弊端：
+1.增加流量消耗，每次请求都需要带上cookie信息。
+2.安全性隐患，cookie使用明文传输。如果cookie被人拦截了，那人就可以取得所有的session信息。
+3.Cookie数量和长度的限制。每个domain最多只能有20条cookie，每个cookie长度不能超过4KB，否则会被截掉
+
+1.cookie，localStorage， sessionStorage三者区别
+
+cookie始终在同源的http请求中携带，即使不需要，cookie在浏览器和服务器中来回传递。而localStorage和sessionStora仅仅在本地存储，不会好服务器通信，也不会自动把数据发送给服务器。
+
+存储大小不同，cookie为4kb左右；localStorage， sessionStorage可以达到5M
+
+数据有效期不同，sessionStorage仅在同源窗口中有效，关闭窗口就消失了，cookie可以设置过期时间，localStorage长期有效
+
+localStorage， sessionStorage有现成的API， cookie需要程序员手动封装
+
+2.如何操作cookie
+
+增加：封装一个函数，函数内构造一个字符串，最后使用document.cookie
+
+修改: name、domain、path三者一致就会修改
+
+查找:使用document.cookie可以进行查找所有的cookie，http-only除外
+
+删除：将cookie的max-age设置为0即为删除，为负数是当前会话内有效
+
+3.跨域请求发送cookie
+ajax中设置withCredentials，后端设置Access-Control-Allow-Origin不能为*，并且Access-Control-Allow-Credentials要设置为true

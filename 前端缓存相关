@@ -1,0 +1,59 @@
+前端缓存相关
+https://blog.csdn.net/qq_37674616/article/details/94414002
+
+前端缓存可以分为
+1.浏览器缓存
+2.cdn缓存
+3.代理服务器缓存
+4.dns缓存
+
+1.浏览器缓存
+
+强制缓存
+不给服务器发送请求，直接从浏览器缓存里取
+设置强缓存
+    expires(http/1.0,时间格式GMT)
+        表示相应头里的过期时间,浏览器再次加载资源时如果在时间之内在命中缓存。
+    cache-control(http/1.1,单位 秒)
+        max-age(表示缓存内容在 xx秒后消失)
+        no-cache(要根据协商缓存是否需要缓存客户端)
+        no-store(所有内容都不会被缓存)
+        public(所有内容都将被缓存包括客户端和代理服务器)
+        private(所有内容只有客户端可以缓存)
+        s-maxage(只用于共享缓存和max-age效果一样,只是max-age 用于普通缓存)
+
+协商缓存
+它指的是强制缓存失效后,浏览器携带缓存标示向服务器发起请求,由服务器决定是否需要使用缓存。
+当协商缓存生效时,返回304和Not Modified
+
+缓存标志包括
+Last-Modified和 If-Modified-Since
+    Last-Modifeds是服务器返回资源同时在header添加的,表示这个资源在服务器上最后修改时间,浏览器接受后缓存文件和header。
+    浏览器下次请求时，检测是否有Last-Modified字段,如果存在则在请求头添加 If-modified-Since该字段值就是上次服务器返回的值
+    如果没有变化则返回304直接从缓存中读取，否则返回新资源
+ETag和If-None-Match
+    Etag是上一次加载资源时,服务器返回的。它的作用是唯一用来标示资源是否有变化。
+    浏览器下次请求时将ETag值传入If-None-Match中,服务端匹配传入的值与上次是否一致，如果一致返回304否则返回新资源和新的ETag
+
+
+我们可以在 Chrome 的开发者工具中，Network -> Size 一列看到一个请求最终的处理方式：如果是大小 (多少 K， 多少 M 等) 就表示是网络请求，否则会列出 from memory cache, from disk cache 和 from ServiceWorker。
+它们的优先级是：(由上到下寻找，找到即返回；找不到则继续)
+
+1.Service Worker
+2.Memory Cache
+3.Disk Cache
+4.网络请求
+
+当浏览器要请求资源时
+
+1.调用 Service Worker 的 fetch 事件响应
+2.查看 memory cache
+3.查看 disk cache。这里又细分：
+    1.如果有强制缓存且未失效，则使用强制缓存，不请求服务器。这时的状态码全部是 200
+    2.如果有强制缓存但已失效，使用对比缓存，比较后确定 304 还是 200
+4.发送网络请求，等待网络响应
+5.把响应内容存入 disk cache (如果 HTTP 头信息配置可以存的话)
+6.把响应内容 的引用 存入 memory cache (无视 HTTP 头信息的配置)
+7.把响应内容存入 Service Worker 的 Cache Storage (如果 Service Worker 的脚本调用了 cache.put())
+
+
